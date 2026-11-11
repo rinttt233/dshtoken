@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Token statistics">
+  <defs>
+    <linearGradient id="dshtoken-icon-bg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2f7cf6"/>
+      <stop offset="1" stop-color="#175bc4"/>
+    </linearGradient>
+    <linearGradient id="dshtoken-icon-bar" x1="18" y1="46" x2="46" y2="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#bfe0ff"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#dshtoken-icon-bg)"/>
+  <rect x="14" y="34" width="8" height="16" rx="2.6" fill="url(#dshtoken-icon-bar)" opacity="0.72"/>
+  <rect x="28" y="24" width="8" height="26" rx="2.6" fill="url(#dshtoken-icon-bar)" opacity="0.88"/>
+  <rect x="42" y="14" width="8" height="36" rx="2.6" fill="url(#dshtoken-icon-bar)"/>
+  <path d="M12.5 51.5h39" stroke="#ffffff" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="46" cy="52" r="7.5" fill="#ffffff" opacity="0.16"/>
+  <path d="M42.6 52.2l2.2 2.2 4.4-4.6" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

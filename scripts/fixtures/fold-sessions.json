@@ -1,0 +1,161 @@
+{
+  "description": "Synthetic session logs for scripts/host-selftest.mjs. Times are ISO strings converted to epoch ms by the test. Shapes follow the DSH SessionEvent contract.",
+  "sessions": [
+    {
+      "name": "basic provider switch via header then context",
+      "header": { "id": "s-basic", "createdAt": "2025-01-06T01:00:00Z", "cwd": "D:/game/dsh" },
+      "inheritedEventCount": 0,
+      "events": [
+        {
+          "type": "request/header",
+          "seq": 0,
+          "time": "2025-01-06T02:00:00Z",
+          "data": {
+            "reason": "initial",
+            "header": { "config": { "provider": "deepseek-official", "model": "deepseek-flash" } }
+          }
+        },
+        {
+          "type": "assistant/message",
+          "seq": 1,
+          "time": "2025-01-06T02:01:00Z",
+          "data": {
+            "usage": {
+              "inputTokens": 1000,
+              "outputTokens": 200,
+              "cacheReadTokens": 400,
+              "reasoningTokens": 50
+            }
+          }
+        },
+        {
+          "type": "request/context",
+          "seq": 2,
+          "time": "2025-01-06T02:02:00Z",
+          "data": { "provider": "deepseek-official", "model": "deepseek-v4-pro" }
+        },
+        {
+          "type": "assistant/message",
+          "seq": 3,
+          "time": "2025-01-06T02:03:00Z",
+          "data": { "usage": { "inputTokens": 2000, "outputTokens": 300, "cacheReadTokens": 1000 } }
+        }
+      ],
+      "expect": {
+        "records": 2,
+        "providers": ["deepseek-official", "deepseek-official"],
+        "models": ["deepseek-flash", "deepseek-v4-pro"],
+        "lastSeq": 3,
+        "lastProvider": "deepseek-official",
+        "lastModel": "deepseek-v4-pro"
+      }
+    },
+    {
+      "name": "inherited prefix usage is skipped but its header attributes own records",
+      "header": { "id": "s-inherited", "createdAt": "2025-01-06T01:30:00Z", "cwd": "D:/game/dsh" },
+      "inheritedEventCount": 2,
+      "events": [
+        {
+          "type": "assistant/message",
+          "seq": 0,
+          "time": "2025-01-06T02:00:00Z",
+          "data": { "usage": { "inputTokens": 999999, "outputTokens": 999999 } }
+        },
+        {
+          "type": "request/header",
+          "seq": 1,
+          "time": "2025-01-06T02:00:01Z",
+          "data": {
+            "reason": "initial",
+            "header": { "config": { "provider": "deepseek-official", "model": "deepseek-flash" } }
+          }
+        },
+        {
+          "type": "assistant/message",
+          "seq": 2,
+          "time": "2025-01-06T02:05:00Z",
+          "data": { "usage": { "inputTokens": 300, "outputTokens": 30, "cacheReadTokens": 100 } }
+        }
+      ],
+      "expect": {
+        "records": 1,
+        "providers": ["deepseek-official"],
+        "models": ["deepseek-flash"],
+        "lastSeq": 2,
+        "input": 300
+      }
+    },
+    {
+      "name": "missing header keeps empty provider/model attribution",
+      "header": { "id": "s-noheader", "createdAt": "2025-01-06T02:00:00Z" },
+      "inheritedEventCount": 0,
+      "events": [
+        {
+          "type": "assistant/message",
+          "seq": 0,
+          "time": "2025-01-06T02:00:00Z",
+          "data": { "usage": { "inputTokens": 10, "outputTokens": 5 } }
+        }
+      ],
+      "expect": { "records": 1, "providers": [""], "models": [""], "lastSeq": 0 }
+    },
+    {
+      "name": "retried attempt takes the last usage stream chunk",
+      "header": { "id": "s-retry", "createdAt": "2025-01-06T02:00:00Z" },
+      "inheritedEventCount": 0,
+      "events": [
+        {
+          "type": "request/header",
+          "seq": 0,
+          "time": "2025-01-06T02:00:00Z",
+          "data": {
+            "reason": "initial",
+            "header": { "config": { "provider": "deepseek-official", "model": "deepseek-flash" } }
+          }
+        },
+        {
+          "type": "assistant/attempt",
+          "seq": 1,
+          "time": "2025-01-06T02:01:00Z",
+          "data": {
+            "stream": [
+              {
+                "type": "chunk",
+                "time": 1736128860000,
+                "chunk": { "type": "usage", "usage": { "inputTokens": 111, "outputTokens": 11 } }
+              },
+              {
+                "type": "chunk",
+                "time": 1736128920000,
+                "chunk": { "type": "usage", "usage": { "inputTokens": 222, "outputTokens": 22 } }
+              }
+            ]
+          }
+        },
+        {
+          "type": "assistant/attempt",
+          "seq": 2,
+          "time": "2025-01-06T02:02:00Z",
+          "data": {
+            "stream": [
+              { "type": "text-chunks", "time0": 1736128920000, "index": 0, "dt": [1], "texts": ["x"] }
+            ]
+          }
+        },
+        {
+          "type": "assistant/message",
+          "seq": 3,
+          "time": "2025-01-06T02:03:00Z",
+          "data": { "usage": { "inputTokens": 333, "outputTokens": 33 }, "stream": [] }
+        }
+      ],
+      "expect": {
+        "records": 2,
+        "providers": ["deepseek-official", "deepseek-official"],
+        "models": ["deepseek-flash", "deepseek-flash"],
+        "inputs": [222, 333],
+        "lastSeq": 3
+      }
+    }
+  ]
+}

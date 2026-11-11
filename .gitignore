@@ -1,0 +1,16 @@
+# Dependencies / build output that must not be committed
+node_modules/
+.pnpm-store/
+*.log
+
+# Local plugin data (never inside the package, listed for safety)
+plugin-data/
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Generated test artifacts
+coverage/

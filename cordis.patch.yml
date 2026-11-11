@@ -1,0 +1,7 @@
+# @local/dshtoken bundle entry.
+# One Host row registers the local HTTP API used by the Client half; the Client
+# half (dist/client.js) adds the stats page, its sidebar icon, and the composer
+# usage chip replacement.
+- insert:
+    - id: dshtoken
+      name: '@local/dshtoken'

@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Token statistics",
+    "description": "A standalone token usage and cost page: date-range bar charts, breakdowns by category, API key, model, or session, cache-hit rate, plus a jump entry inside the composer usage chip."
+  }
+}
